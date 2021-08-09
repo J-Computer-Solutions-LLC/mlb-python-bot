@@ -1,5 +1,7 @@
+from __future__ import print_function
 import json
 import datetime
+import mlbgame
 
 with open('test.json') as f:
     data = json.load(f)
@@ -9,28 +11,26 @@ def get_games(data):
     return games
 
 def parse_json(data):
+    predictions = []
     for item in data['games']:
         prediction = {}
         prediction['Away_Team'] = item['teams']['away']['name']
         prediction['Home_Team'] = item['teams']['home']['name']
-        for stats in item['stats']['wpa']['gameWpa']:
-            prediction['HomeTeam_WinPercentage'] = stats['homeTeamWinProbability']
-            prediction['AwayTeam_WinPercentage'] = stats['awayTeamWinProbability']
-            Winning_Team = ''
-            if prediction['HomeTeam_WinPercentage'] > prediction['AwayTeam_WinPercentage']:
-                Winning_Team = prediction['Home_Team']
-            else:
-                Winning_Team = prediction['Away_Team']
-        prediction['Team_Predicted_ToWin'] = Winning_Team
-
+        prediction['gameID'] = item['gamePk']
         print(prediction)
+        predictions.append(prediction)
+    return predictions
 
+def print_team_stats(predictions):
+    for prediction in predictions:
+        stats = mlbgame.players(prediction['gameID'])
+        print(stats)
         
-            
+    
+        
+        #for stats in item['stats']['wpa']['gameWpa']:
 
-
-
-
-
+    
 print(get_games(data))
-parse_json(data)
+predictions = parse_json(data)
+print_team_stats(predictions)

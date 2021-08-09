@@ -25,5 +25,6 @@ for game in games:
         prediction['win_percentage'] = random.uniform(51.0, 81.0)
         prediction['winning_predicted_team'] = win_team
         prediction['game_date'] = todays_date
-        send = requests.post(url, prediction)
-        print(send)
+        #send = requests.post(url, prediction)
+        stats = mlbgame.players(prediction['game_id'])
+        print(stats.__keys__)
